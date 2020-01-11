@@ -1,19 +1,28 @@
 import { Injectable, Post } from "@nestjs/common";
-import { Product } from "./products.module";
+import { Product } from "./products.class";
 
 @Injectable()
 export class ProductsService {
-    products: Product[] = [];
+    private products: Product[] = [];
 
-    @Post()
     insertProduct(title: string, desc: string, price: number) {
+        const generateId = new Date().getTime().toString();
         this.products.push(
             new Product(
-                new Date().toString(),
+                generateId,
                 title,
                 desc,
                 price,
             ),
         );
+        return generateId;
+    }
+
+    getProducts() {
+        return [...this.products];
+    }
+
+    getSingleProduct(prodId: string) {
+        return this.products.find((prod: any) => prod.id === prodId );
     }
 }
