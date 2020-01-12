@@ -11,13 +11,19 @@ export class AuthController {
 
     @Post('/signup')
     @UsePipes(ValidationPipe)
-    signUp(@Body() authCredentialsDTO: AuthCredentialsDTO) {
-        return this.authService.signUp(authCredentialsDTO);
+    async signUp(@Body() authCredentialsDTO: AuthCredentialsDTO) {
+        const user = await this.authService.signUp(authCredentialsDTO);
+        return {
+            username: user.username,
+        };
     }
 
     @Post('/signin')
     @UsePipes(ValidationPipe)
-    signIn(@Body() authCredentialsDTO: AuthCredentialsDTO) {
-        return this.authService.signIn(authCredentialsDTO);
+    async signIn(@Body() authCredentialsDTO: AuthCredentialsDTO) {
+        const username = await this.authService.signIn(authCredentialsDTO);
+        return {
+            username,
+        };
     }
 }

@@ -1,4 +1,4 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable, BadRequestException, UnauthorizedException } from '@nestjs/common';
 import { UserRepository } from './user.reponsitory';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AuthCredentialsDTO } from './dto/auth_credentials.dto';
@@ -17,7 +17,7 @@ export class AuthService {
     async signIn(authCredentialsDTO: AuthCredentialsDTO): Promise<string> {
         const result = await this.userRepository.validateUserPassword(authCredentialsDTO);
         if (!result) {
-            throw new BadRequestException();
+            throw new UnauthorizedException();
         }
         return result;
     }

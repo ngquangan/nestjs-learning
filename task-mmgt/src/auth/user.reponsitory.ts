@@ -1,7 +1,7 @@
 import { Repository, EntityRepository } from 'typeorm';
 import { UserEntity } from './user.entity';
 import { AuthCredentialsDTO } from './dto/auth_credentials.dto';
-import { ConflictException, InternalServerErrorException } from '@nestjs/common';
+import { ConflictException, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 
 @EntityRepository(UserEntity)
@@ -32,8 +32,11 @@ export class UserRepository extends Repository<UserEntity> {
     async validateUserPassword(authCredentialsDTO: AuthCredentialsDTO): Promise<string> {
         const { username, password } = authCredentialsDTO;
         const user = await this.findOne({username});
-        const isCompare = await user.validatePassword(password);
-        if (user && isCompare) {
+        if (!user) {
+            throw new NotFoundException();
+        }
+        const isCompare = user && await user.validatePassword(password);
+        if (isCompare) {
             return user.username;
         }
         return null;
