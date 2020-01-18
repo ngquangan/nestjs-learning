@@ -1,0 +1,8 @@
+db:
+  host: 'localhost'
+  username: 'annq'
+  password: 'annq'
+  synchronize: true
+
+jwt:
+  secret: 'Thisismysecret'
